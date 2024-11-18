@@ -11,12 +11,13 @@ export function checkEnv(env: NodeJS.ProcessEnv) {
         "MAIL_FROM_EMAIL",
         "GOOGLE_CLIENT_ID",
         "GOOGLE_CLIENT_SECRET",
-
     ];
 
     const missing = required.filter((key) => !env[key]);
 
     if (missing.length > 0) {
+        console.log("Missing required environment variables:", missing);
+
         throw new Error(`Missing required environment variables: ${missing.join(", ")}`);
     }
 }

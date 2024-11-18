@@ -11,9 +11,28 @@ services:
   #   volumes:
   #     - ./sqld:/var/lib/sqld
   nuxt:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+      args:
+        - env_file=.env
+
     env_file:
       - .env
+    environment:
+      - NUXT_SESSION_PASSWORD=${NUXT_SESSION_PASSWORD}
+      - NODE_ENV=production
+      - NUXT_TURSO_DATABASE_URL=${NUXT_TURSO_DATABASE_URL}
+      - NUXT_TURSO_AUTH_TOKEN=${NUXT_TURSO_AUTH_TOKEN}
+      - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET}
+      - NUXT_BETTER_AUTH_URL=${NUXT_BETTER_AUTH_URL}
+      - BETTER_AUTH_URL=${BETTER_AUTH_URL}
+      - MAILGUN_API_KEY=${MAILGUN_API_KEY}
+      - MAILGUN_DOMAIN=${MAILGUN_DOMAIN}
+      - MAIL_FROM_EMAIL=${MAIL_FROM_EMAIL}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
     ports:
       - "3000:3000"
     volumes:
