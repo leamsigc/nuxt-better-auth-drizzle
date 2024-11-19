@@ -25,7 +25,6 @@ interface Tenant {
 
 const tenants = ref<Tenant[]>([])
 const { openCreate, openEdit, openDelete } = useTenant()
-const { themes } = useThemes()
 
 const formatDate = (timestamp: number) => {
   return new Date(timestamp).toLocaleDateString('en-US', {
@@ -44,12 +43,19 @@ const getInitials = (name: string) => {
     .slice(0, 2)
 }
 
-const { data, pending, refresh, status } = await useFetch<{tenants:Tenant[]}>('/api/v1/tenant')
+const { data, status,pending } = await useFetch<{tenants:Tenant[]}>('/api/v1/tenant')
 
 if (status.value == "success") {
   tenants.value = data.value?.tenants || [] as Tenant[]  
 }
 
+
+const refreshTenants = async () => {
+  const data = await $fetch<{ tenants: Tenant[] }>('/api/v1/tenant');
+  if (data.tenants) {
+    tenants.value = data.tenants;
+  }
+}
 </script>
 
 <template>
@@ -131,9 +137,9 @@ if (status.value == "success") {
     </div>
 
     <!-- Tenant Management Dialogs -->
-    <CreateTenant @refresh="refresh" />
-    <EditTenant @refresh="refresh" />
-    <DeleteTenant @refresh="refresh" />
+    <CreateTenant @refresh="refreshTenants" />
+    <EditTenant @refresh="refreshTenants" />
+    <DeleteTenant @refresh="refreshTenants" />
   </div>
 </template>
 

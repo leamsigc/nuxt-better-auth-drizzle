@@ -9,12 +9,21 @@ const form = ref({
   description: '',
   status: 'active',
   theme: 'light',
-  logoUrl: ''
+  logo: ''
 })
 
 const handleSubmit = async () => {
   try {
     await createTenant(form.value)
+    // Reset form
+    form.value = {
+      name: '',
+      slug: '',
+      description: '',
+      status: 'active',
+      theme: 'light',
+      logo: ''
+    }
     // Emit refresh event to parent
     emit('refresh')
     closeCreate()
@@ -65,13 +74,24 @@ const emit = defineEmits<{
           />
         </div>
         <div class="grid gap-2">
-          <UiLabel for="logoUrl">Logo URL</UiLabel>
+          <UiLabel for="logo">Logo URL</UiLabel>
           <UiInput
-            id="logoUrl"
-            v-model="form.logoUrl"
+            id="logo"
+            v-model="form.logo"
             placeholder="https://example.com/logo.png"
             type="url"
           />
+
+          <div v-if="form.logo" class="mt-2">
+            <p class="text-sm text-muted-foreground mb-2">Preview:</p>
+            <div class="w-12 h-12 rounded-sm overflow-hidden">
+              <img 
+                :src="form.logo" 
+                :alt="form.name"
+                class="w-full h-full object-cover"
+              />
+            </div>
+          </div>
         </div>
         <div class="grid gap-2">
           <UiLabel for="theme">Theme</UiLabel>

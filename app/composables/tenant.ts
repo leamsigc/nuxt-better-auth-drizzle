@@ -31,7 +31,14 @@ const isLoading = ref(false)
 export function useTenant() {
 
   const openCreate = () => {
+
+    // All other modals should be closed
+    isEditOpen.value = false
+    isDeleteOpen.value = false
+    selectedTenant.value = null
     isCreateOpen.value = true
+
+
   }
 
   const closeCreate = () => {
@@ -85,7 +92,6 @@ export function useTenant() {
       })
 
       if (error.value) throw error.value
-      closeEdit()
       return updatedTenant.value
     } catch (error) {
       console.error('Error updating tenant:', error)
@@ -130,3 +136,4 @@ export function useTenant() {
     deleteTenant,
   }
 }
+

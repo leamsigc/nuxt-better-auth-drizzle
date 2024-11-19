@@ -39,6 +39,10 @@ import { signOut, useSession } from "~~/lib/auth-client";
 const { data: session } = await useSession(useFetch);
 const router = useRouter();
 
+
+
+const { data: requestForTenants } = await useAsyncData<{tenants:Tenant[]}>("tenants",  () => $fetch('/api/v1/tenant'));
+
 const HandleSingOut = async () => {
   await signOut();
   router.push("/login");
@@ -51,37 +55,20 @@ const data = {
     email: "m@example.com",
     avatar: "/avatars/shadcn.jpg",
   },
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
   navMain: [
     {
-      title: "Playground",
+      title: "Dashboard",
       url: "#",
       icon: SquareTerminal,
       isActive: true,
       items: [
         {
-          title: "History",
-          url: "#",
+          title: "Home",
+          url: "/",
         },
         {
-          title: "Starred",
-          url: "#",
+          title: "Dashboard",
+          url: "/app/",
         },
         {
           title: "Settings",
@@ -157,8 +144,8 @@ const data = {
   ],
   projects: [
     {
-      name: "Design Engineering",
-      url: "#",
+      name: "Tenants",
+      url: "/app/tenants",
       icon: Frame,
     },
     {
@@ -174,11 +161,15 @@ const data = {
   ],
 };
 
-const activeTeam = ref(data.teams[0]);
+const activeTenant = ref(requestForTenants.value?.tenants[0]);
 
-function setActiveTeam(team: typeof data.teams[number]) {
-  activeTeam.value = team;
+function setActiveTeam(tenant:Tenant) {
+  activeTenant.value = tenant;
 }
+
+const tenants = computed(() => {
+  return requestForTenants.value?.tenants || []
+});
 </script>
 
 <template>
@@ -195,12 +186,12 @@ function setActiveTeam(team: typeof data.teams[number]) {
                 >
                   <div
                     class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground"
-                  >
-                    <component :is="activeTeam?.logo" class="size-4" />
+                  > 
+                    <NuxtImg :src="activeTenant?.logo || ''" :alt="activeTenant?.name || 'Tenant Logo'" class="size-4" />
                   </div>
                   <div class="grid flex-1 text-left leading-tight">
-                    <span class="truncate font-semibold">{{ activeTeam?.name }}</span>
-                    <span class="truncate text-xs">{{ activeTeam?.plan }}</span>
+                    <span class="truncate font-semibold">{{ activeTenant?.name }}</span>
+                    <span class="truncate text-xs">{{ activeTenant?.status }}</span>
                   </div>
                   <ChevronsUpDown class="ml-auto" />
                 </UiSidebarMenuButton>
@@ -212,16 +203,16 @@ function setActiveTeam(team: typeof data.teams[number]) {
                 :side-offset="4"
               >
                 <UiDropdownMenuLabel class="text-muted-foreground">
-                  Teams
+                  Tenants
                 </UiDropdownMenuLabel>
                 <UiDropdownMenuItem
-                  v-for="(team, index) in data.teams"
+                  v-for="(team, index) in tenants"
                   :key="team.name"
                   class="gap-2 p-2"
                   @click="setActiveTeam(team)"
                 >
                   <div class="flex size-6 items-center justify-center rounded-sm border">
-                    <component :is="team.logo" class="size-4 shrink-0" />
+                    <NuxtImg :src="team.logo || ''" class="size-4 shrink-0" />
                   </div>
                   {{ team.name }}
                   <UiDropdownMenuShortcut>⌘{{ index + 1 }}</UiDropdownMenuShortcut>

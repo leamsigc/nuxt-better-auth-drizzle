@@ -35,7 +35,7 @@ const cssVars = computed(() => ({
     :class="['rounded-[15px] p-[2px] shine relative', props.class || '']"
   >
     <div
-      class="rounded-[13px] w-full h-full bg-gradient-to-b from-neutral-800/95 to-neutral-950/5 bg-neutral-950/80 absolute"
+      class=" rounded-[13px] w-full h-full bg-gradient-to-b from-neutral-800/95 to-neutral-950/5 bg-neutral-950/80 absolute -z-10 pointer-events-none"
       :class="props.showBg ? 'opacity-5 dark:opacity-100' : 'opacity-5'"
     />
     <slot />

@@ -10,28 +10,42 @@
  * @todo [ ] Integration test.
  * @todo [✔] Update the typescript.
  */
-import { signOut, useSession } from "~~/lib/auth-client";
-const router = useRouter();
+const { data } = useNuxtData("tenants");
 
-const HandleSingOut = async () => {
-  await signOut();
-  router.push("/login");
-};
-
-const { data: session, isPending, error } = await useSession(useFetch);
 </script>
 
 <template>
-  <div>
-    <UiButton class="px-5 py-3 border border-slate-400 rounded-lg" @click="HandleSingOut">
-      Logout
-    </UiButton>
-    <section>Pending: {{ isPending }}</section>
-    <section>Error: {{ error }}</section>
-    <section>
-      User:
-      <code>{{ session?.user }}</code>
-    </section>
+  <div class="container-lg mx-auto p-4">
+     <div class="grid lg:grid-cols-4 gap-4 w-full">
+        <ShinyCard
+          v-for="({ logo, name, description,slug }, index) in data.tenants"
+          :key="name"
+          :show-bg="false"
+        >
+          <NuxtLink :href="`/app/tenant/${slug}`" >
+            <UiCard
+              class="bg-muted/90 dark:bg-card hover:bg-background dark:hover:bg-background transition-all delay-75 group/number h-full flex flex-col"
+            >
+              <UiCardHeader>
+                <div class="flex justify-between">
+                  <NuxtImg class="size-8 mb-6 text-primary" :src="logo" />
+                  <span
+                    class="text-5xl text-muted-foreground/15 font-medium transition-all delay-75 group-hover/number:text-muted-foreground/30"
+                  >
+                    0{{ index + 1 }}
+                  </span>
+                </div>
+  
+                <UiCardTitle>{{ name }}</UiCardTitle>
+              </UiCardHeader>
+  
+              <UiCardContent class="text-muted-foreground flex-1">
+                {{ description }}
+              </UiCardContent>
+            </UiCard>
+          </NuxtLink>
+        </ShinyCard>
+      </div>
   </div>
 </template>
 <style scoped></style>

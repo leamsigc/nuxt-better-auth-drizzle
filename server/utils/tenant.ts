@@ -89,12 +89,12 @@ export class TenantService {
             .from(tables.tenants)
             .where(eq(tables.tenants.slug, slug));
 
-        if (excludeId) {
-            const [tenant] = await useDrizzle().select().from(tables.tenants).where(eq(tables.tenants.id, excludeId));
-            return !tenant;
+        const [tenant] = await query;
+
+        if (tenant && tenant.id === excludeId) {
+            return true;
         }
 
-        const [tenant] = await query;
         return !tenant;
     }
 }
