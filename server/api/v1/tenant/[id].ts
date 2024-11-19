@@ -1,7 +1,27 @@
-import { TenantService, insertTenantSchema } from '~~/server/utils/tenant';
+
 import { z } from 'zod';
 
 export default defineEventHandler(async (event) => {
+
+    // Check the query parameters
+    const query = getQuery(event);
+
+    if (query.slug) {
+        const tenant = await TenantService.getBySlug(query.slug as string);
+        if (!tenant) {
+            throw createError({
+                statusCode: 404,
+                message: 'Tenant not found'
+            });
+        }
+        const templates = await TemplateService.getByTenant(tenant.id);
+
+        return {
+            tenant,
+            templates
+        };
+    }
+
     const id = Number(event.context.params?.id);
     if (isNaN(id)) {
         throw createError({

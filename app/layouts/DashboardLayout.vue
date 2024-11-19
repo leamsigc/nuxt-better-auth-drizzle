@@ -39,9 +39,8 @@ import { signOut, useSession } from "~~/lib/auth-client";
 const { data: session } = await useSession(useFetch);
 const router = useRouter();
 
-
-
-const { data: requestForTenants } = await useAsyncData<{tenants:Tenant[]}>("tenants",  () => $fetch('/api/v1/tenant'));
+// Fetch the tenants
+const { data: requestForTenants,refresh } = await useAsyncData<{tenants:Tenant[]}>("tenants",  () => $fetch('/api/v1/tenant'));
 
 const HandleSingOut = async () => {
   await signOut();
@@ -170,6 +169,14 @@ function setActiveTeam(tenant:Tenant) {
 const tenants = computed(() => {
   return requestForTenants.value?.tenants || []
 });
+
+
+const refreshTenants = async () => {
+  await refresh()
+  activeTenant.value = requestForTenants.value?.tenants[0]
+}
+
+
 </script>
 
 <template>
@@ -410,8 +417,12 @@ const tenants = computed(() => {
             </UiBreadcrumbList>
           </UiBreadcrumb>
         </div>
+        <div class="ml-auto flex items-center gap-4 pr-8">
+          <ToggleTheme />
+        </div>
       </header>
       <div class="flex flex-1 flex-col gap-4 p-4 pt-0">
+        <CreateFirstTenant v-if="requestForTenants && !requestForTenants.tenants?.length" @refresh="refreshTenants" />
         <slot />
       </div>
     </UiSidebarInset>
