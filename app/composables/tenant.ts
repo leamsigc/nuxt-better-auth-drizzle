@@ -22,12 +22,13 @@ interface TenantFormData {
   status: string
 }
 
+const isCreateOpen = ref(false)
+const isEditOpen = ref(false)
+const isDeleteOpen = ref(false)
+const selectedTenant = ref<Tenant | null>(null)
+const isLoading = ref(false)
+
 export function useTenant() {
-  const isCreateOpen = ref(false)
-  const isEditOpen = ref(false)
-  const isDeleteOpen = ref(false)
-  const selectedTenant = ref<Tenant | null>(null)
-  const isLoading = ref(false)
 
   const openCreate = () => {
     isCreateOpen.value = true
@@ -60,13 +61,12 @@ export function useTenant() {
   const createTenant = async (data: TenantFormData) => {
     isLoading.value = true
     try {
-      const { data: newTenant, error } = await useFetch('/api/v1/tenants', {
+      const { data: newTenant, error } = await useFetch('/api/v1/tenant', {
         method: 'POST',
         body: data
       })
-      
+
       if (error.value) throw error.value
-      closeCreate()
       return newTenant.value
     } catch (error) {
       console.error('Error creating tenant:', error)
@@ -79,11 +79,11 @@ export function useTenant() {
   const updateTenant = async (id: number, data: Partial<TenantFormData>) => {
     isLoading.value = true
     try {
-      const { data: updatedTenant, error } = await useFetch(`/api/v1/tenants/${id}`, {
+      const { data: updatedTenant, error } = await useFetch(`/api/v1/tenant/${id}`, {
         method: 'PATCH',
         body: data
       })
-      
+
       if (error.value) throw error.value
       closeEdit()
       return updatedTenant.value
@@ -98,10 +98,10 @@ export function useTenant() {
   const deleteTenant = async (id: number) => {
     isLoading.value = true
     try {
-      const { error } = await useFetch(`/api/v1/tenants/${id}`, {
+      const { error } = await useFetch(`/api/v1/tenant/${id}`, {
         method: 'DELETE'
       })
-      
+
       if (error.value) throw error.value
       closeDelete()
       return true

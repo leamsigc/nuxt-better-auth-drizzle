@@ -1,12 +1,15 @@
 <script lang="ts" setup>
 
 const { isCreateOpen, closeCreate, createTenant, isLoading } = useTenant()
+const { themes } = useThemes()
 
 const form = ref({
   name: '',
   slug: '',
   description: '',
-  status: 'active'
+  status: 'active',
+  theme: 'light',
+  logoUrl: ''
 })
 
 const handleSubmit = async () => {
@@ -14,6 +17,7 @@ const handleSubmit = async () => {
     await createTenant(form.value)
     // Emit refresh event to parent
     emit('refresh')
+    closeCreate()
   } catch (error) {
     console.error('Failed to create tenant:', error)
   }
@@ -59,6 +63,32 @@ const emit = defineEmits<{
             v-model="form.description"
             placeholder="Enter tenant description"
           />
+        </div>
+        <div class="grid gap-2">
+          <UiLabel for="logoUrl">Logo URL</UiLabel>
+          <UiInput
+            id="logoUrl"
+            v-model="form.logoUrl"
+            placeholder="https://example.com/logo.png"
+            type="url"
+          />
+        </div>
+        <div class="grid gap-2">
+          <UiLabel for="theme">Theme</UiLabel>
+          <UiSelect v-model="form.theme">
+            <UiSelectTrigger>
+              <UiSelectValue placeholder="Select theme" />
+            </UiSelectTrigger>
+            <UiSelectContent>
+              <UiSelectItem
+                v-for="theme in themes"
+                :key="theme.id"
+                :value="theme.value"
+              >
+                {{ theme.name }}
+              </UiSelectItem>
+            </UiSelectContent>
+          </UiSelect>
         </div>
         <div class="grid gap-2">
           <UiLabel for="status">Status</UiLabel>

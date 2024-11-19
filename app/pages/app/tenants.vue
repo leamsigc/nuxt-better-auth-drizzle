@@ -25,6 +25,7 @@ interface Tenant {
 
 const tenants = ref<Tenant[]>([])
 const { openCreate, openEdit, openDelete } = useTenant()
+const { themes } = useThemes()
 
 const formatDate = (timestamp: number) => {
   return new Date(timestamp).toLocaleDateString('en-US', {
@@ -34,14 +35,21 @@ const formatDate = (timestamp: number) => {
   })
 }
 
-const { data, pending, refresh } = await useFetch<Tenant[]>('/api/v1/tenant')
+const getInitials = (name: string) => {
+  return name
+    .split(' ')
+    .map(word => word[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2)
+}
 
+const { data, pending, refresh, status } = await useFetch<{tenants:Tenant[]}>('/api/v1/tenant')
 
-onMounted(() => {
-  if (data.value) {
-    tenants.value = data.value
-  }
-})
+if (status.value == "success") {
+  tenants.value = data.value?.tenants || [] as Tenant[]  
+}
+
 </script>
 
 <template>
@@ -62,6 +70,7 @@ onMounted(() => {
             <UiTableHead>Name</UiTableHead>
             <UiTableHead>Slug</UiTableHead>
             <UiTableHead>Description</UiTableHead>
+            <UiTableHead>Theme</UiTableHead>
             <UiTableHead>Status</UiTableHead>
             <UiTableHead>Created</UiTableHead>
             <UiTableHead>Updated</UiTableHead>
@@ -72,18 +81,27 @@ onMounted(() => {
           <UiTableRow v-for="tenant in tenants" :key="tenant.id">
             <UiTableCell class="font-medium">
               <div class="flex items-center gap-2">
-                <img 
-                  v-if="tenant.logo" 
-                  :src="tenant.logo" 
-                  :alt="tenant.name"
-                  class="w-6 h-6 rounded-sm object-cover"
-                />
+                <div v-if="tenant.logo" class="w-8 h-8 rounded-sm overflow-hidden">
+                  <img 
+                    :src="tenant.logo" 
+                    :alt="tenant.name"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                <div v-else class="w-8 h-8 rounded-sm bg-primary flex items-center justify-center text-primary-foreground text-sm font-medium">
+                  {{ getInitials(tenant.name) }}
+                </div>
                 {{ tenant.name }}
               </div>
             </UiTableCell>
             <UiTableCell>{{ tenant.slug }}</UiTableCell>
             <UiTableCell class="max-w-[200px] truncate">
               {{ tenant.description || '-' }}
+            </UiTableCell>
+            <UiTableCell>
+              <UiBadge variant="outline">
+                {{ tenant.theme || 'Light' }}
+              </UiBadge>
             </UiTableCell>
             <UiTableCell>
               <UiBadge :variant="tenant.status === 'active' ? 'default' : 'destructive'">

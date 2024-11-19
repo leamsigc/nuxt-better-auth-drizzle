@@ -12,6 +12,8 @@ export const insertTenantSchema = createInsertSchema(tables.tenants, {
     logo: z.string().url().optional(),
     theme: z.string().optional(),
     status: z.enum(['active', 'inactive']).default('active'),
+    createdAt: z.date().default(new Date()),
+    updatedAt: z.date().default(new Date()),
 });
 
 export type InsertTenant = z.infer<typeof insertTenantSchema>;

@@ -1,12 +1,15 @@
 <script lang="ts" setup>
 
 const { isEditOpen, closeEdit, updateTenant, selectedTenant, isLoading } = useTenant()
+const { themes } = useThemes()
 
 const form = ref({
   name: '',
   slug: '',
   description: '',
-  status: 'active'
+  status: 'active',
+  theme: 'light',
+  logo: ''
 })
 
 // Update form when selected tenant changes
@@ -16,7 +19,9 @@ watch(selectedTenant, (tenant) => {
       name: tenant.name,
       slug: tenant.slug,
       description: tenant.description || '',
-      status: tenant.status
+      status: tenant.status,
+      theme: tenant.theme || 'light',
+      logo: tenant.logo || ''
     }
   }
 })
@@ -28,6 +33,7 @@ const handleSubmit = async () => {
     await updateTenant(selectedTenant.value.id, form.value)
     // Emit refresh event to parent
     emit('refresh')
+    closeEdit()
   } catch (error) {
     console.error('Failed to update tenant:', error)
   }
@@ -73,6 +79,42 @@ const emit = defineEmits<{
             v-model="form.description"
             placeholder="Enter tenant description"
           />
+        </div>
+        <div class="grid gap-2">
+          <UiLabel for="logo">Logo URL</UiLabel>
+          <UiInput
+            id="logo"
+            v-model="form.logo"
+            type="url"
+            placeholder="https://example.com/logo.png"
+          />
+          <div v-if="form.logo" class="mt-2">
+            <p class="text-sm text-muted-foreground mb-2">Preview:</p>
+            <div class="w-12 h-12 rounded-sm overflow-hidden">
+              <img 
+                :src="form.logo" 
+                :alt="form.name"
+                class="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="grid gap-2">
+          <UiLabel for="theme">Theme</UiLabel>
+          <UiSelect v-model="form.theme">
+            <UiSelectTrigger>
+              <UiSelectValue placeholder="Select theme" />
+            </UiSelectTrigger>
+            <UiSelectContent>
+              <UiSelectItem
+                v-for="theme in themes"
+                :key="theme.id"
+                :value="theme.value"
+              >
+                {{ theme.name }}
+              </UiSelectItem>
+            </UiSelectContent>
+          </UiSelect>
         </div>
         <div class="grid gap-2">
           <UiLabel for="status">Status</UiLabel>
