@@ -26,7 +26,15 @@ const isLoading = ref(false);
 
 const tenant = computed(() => {
   if (data.value?.tenant) {
-    return data.value.tenant;
+    return data.value.tenant as {
+      id: number;
+      name: string;
+      slug?: string;
+      description?: string;
+      theme?: string;
+      logo?: string | null;
+      status?: string;
+    };
   } else {
     return null;
   }
@@ -59,7 +67,7 @@ const templates = computed(() => {
     <!-- Tenant Details -->
     <div v-else class="relative">
       <!-- Header Section -->
-      <SingleTenantHero v-if="tenant" v-bind="tenant" :name="tenant.name" :logo="tenant.logo" />
+      <SingleTenantHero v-if="tenant" v-bind="tenant" />
 
 
       <!-- Content Section -->
