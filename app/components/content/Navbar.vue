@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { signOut, useSession } from "~~/lib/auth-client";
 /**
  *
  * Component Description:Desc
@@ -14,10 +15,16 @@
 const mode = useColorMode();
 
 const isOpen = ref<boolean>(false);
+const { data: session, isPending, error } = await useSession(useFetch);
+const isUserLogin = computed(() => {
+  return session.value?.user;
+});
 
 const { data } = await useAsyncData("nav_en", () =>
   queryContent("/").where({ _partial: true, title: "nav" }).findOne()
 );
+
+
 </script>
 
 <template>
@@ -122,12 +129,23 @@ const { data } = await useAsyncData("nav_en", () =>
         <ToggleTheme />
 
         <template v-if="data">
-          <UiButton as-child size="sm" variant="ghost" :aria-label="action.label" v-for="action in data.actions">
-            <NuxtLink :aria-label="action.label" :href="action.href" :target="action.target || ''" :prefetch="false">
-              <Icon :name="action.icon" />
-              {{ action.name }}
-            </NuxtLink>
-          </UiButton>
+          <template v-if="isUserLogin">
+            <UiButton as-child size="sm" variant="ghost" :aria-label="action.label"
+              v-for="action in data.loggedActions">
+              <NuxtLink :aria-label="action.label" :href="action.href" :target="action.target || ''" :prefetch="false">
+                <Icon :name="action.icon" />
+                {{ action.name }}
+              </NuxtLink>
+            </UiButton>
+          </template>
+          <template v-else>
+            <UiButton as-child size="sm" variant="ghost" :aria-label="action.label" v-for="action in data.actions">
+              <NuxtLink :aria-label="action.label" :href="action.href" :target="action.target || ''" :prefetch="false">
+                <Icon :name="action.icon" />
+                {{ action.name }}
+              </NuxtLink>
+            </UiButton>
+          </template>
         </template>
       </div>
     </header>

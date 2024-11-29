@@ -110,4 +110,10 @@ actions:
     href: "/register"
     label: "Register an account"
     icon: ""
+
+loggedActions:
+  - name: 'Dashboard'
+    href: "/app/"
+    label: "Dashboard"
+    icon: "lucide:layout-dashboard"
 ---

@@ -17,7 +17,7 @@
     <UiToastProvider>
       <Navbar />
       <slot />
-      <TheFooter />
+      <LazyTheFooter />
     </UiToastProvider>
   </main>
 </template>

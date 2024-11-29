@@ -1,3 +1,4 @@
+import type { NuxtPage } from 'nuxt/schema';
 import { OgImage } from './.nuxt/components.d';
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
@@ -7,6 +8,19 @@ import { env } from "node:process";
 checkEnv(env);
 
 export default defineNuxtConfig({
+  // hooks: {
+  //   'pages:extend'(pages) {
+  //     // add a route
+  //     const routesToSameComponent = ['accessories', 'makeup'];
+  //     for (const route of routesToSameComponent) {
+  //       pages.push({
+  //         name: route,
+  //         path: `/${route}/:id`,
+  //         file: '~/pages/collection/index.vue'
+  //       })
+  //     }
+  //   }
+  // },
   compatibilityDate: '2024-04-03',
   future: { compatibilityVersion: 4 },
   devtools: { enabled: true },
