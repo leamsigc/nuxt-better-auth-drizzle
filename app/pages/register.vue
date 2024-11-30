@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { useToast } from "~/components/ui/toast/use-toast";
-import { signUp } from "~~/lib/auth-client";
+import { signUp, signIn } from "~~/lib/auth-client";
 /**
  *
  * Register view
@@ -20,6 +20,8 @@ const userInformation = ref({
   password: "",
   password_confirm: "",
 });
+
+const selectedRegisterMethod = ref<'none' | 'email' | 'google'>('none');
 
 const registerForm = computed(() => [
   {
@@ -79,6 +81,23 @@ const HandleRegisterUser = async () => {
     },
   });
 };
+
+const signInWithGoogle = async () => {
+  await signIn.social({
+    provider: "google",
+    callbackURL: "/app/",
+    fetchOptions: {
+      onError: (context) => {
+        toast({
+          title: "Please try again",
+          description: context?.error?.message || "Please check your email and password",
+          variant: "destructive",
+        });
+      },
+    }
+  })
+}
+
 </script>
 
 <template>
@@ -88,17 +107,31 @@ const HandleRegisterUser = async () => {
       <UiCardHeader>
         <UiCardTitle class="text-2xl"> Register </UiCardTitle>
         <UiCardDescription>
-          Enter your details to create your account.
+          Choose your preferred registration method.
         </UiCardDescription>
       </UiCardHeader>
       <UiCardContent class="grid gap-4">
-        <FormKit id="register-form" v-slot="{ state: { valid } }" v-model="userInformation" type="form" :actions="false"
-          @submit="HandleRegisterUser">
-          <FormKitSchema :schema="registerForm" />
+        <div v-if="selectedRegisterMethod === 'none'" class="grid gap-4">
+          <UiButton class="w-full" @click="selectedRegisterMethod = 'email'">
+            <Icon class="size-4" name="heroicons:envelope" />
+            <span class="ml-2">Continue with Email</span>
+          </UiButton>
+          <UiButton variant="outline" class="w-full" @click="signInWithGoogle">
+            <Icon class="size-4" name="logos:google-icon" />
+            <span class="ml-2">Continue with Google</span>
+          </UiButton>
+        </div>
 
+        <FormKit v-else-if="selectedRegisterMethod === 'email'" id="register-form" v-slot="{ state: { valid } }"
+          v-model="userInformation" type="form" :actions="false" @submit="HandleRegisterUser">
+          <FormKitSchema :schema="registerForm" />
           <UiButton class="w-full" type="submit" :disabled="!valid"> Register </UiButton>
+          <UiButton variant="ghost" class="w-full mt-2" @click="selectedRegisterMethod = 'none'">
+            Back to registration options
+          </UiButton>
         </FormKit>
-        <Separator />
+
+        <UiSeparator />
         <UiButton variant="ghost" class="w-full">
           <NuxtLink to="/login">
             Already have an account?

@@ -18,6 +18,8 @@ const loginForm = ref({
   password: "",
 });
 
+const selectedLoginMethod = ref<'none' | 'email' | 'google'>('none');
+
 const loginFormSchema = [
   {
     $formkit: "text",
@@ -77,20 +79,30 @@ const signInWithGoogle = async () => {
       <UiCardHeader>
         <UiCardTitle class="text-2xl"> Login </UiCardTitle>
         <UiCardDescription>
-          Enter your email below to login to your account.
+          Choose your preferred login method.
         </UiCardDescription>
       </UiCardHeader>
       <UiCardContent class="grid gap-4">
-        <FormKit id="login-form" v-slot="{ state: { valid } }" v-model="loginForm" type="form" :actions="false"
-          @submit="HandleLoginUser">
-          <FormKitSchema :schema="loginFormSchema" />
-          <UiButton class="w-full" type="submit" :disabled="!valid"> Sign in </UiButton>
-          <UiSeparator label="OR" class="my-8" />
-          <UiButton variant="outline" type="button" @click="signInWithGoogle" class="w-full">
+        <div v-if="selectedLoginMethod === 'none'" class="grid gap-4">
+          <UiButton class="w-full" @click="selectedLoginMethod = 'email'">
+            <Icon class="size-4" name="heroicons:envelope" />
+            <span class="ml-2">Continue with Email</span>
+          </UiButton>
+          <UiButton variant="outline" class="w-full" @click="signInWithGoogle">
             <Icon class="size-4" name="logos:google-icon" />
             <span class="ml-2">Continue with Google</span>
           </UiButton>
+        </div>
+
+        <FormKit v-else-if="selectedLoginMethod === 'email'" id="login-form" v-slot="{ state: { valid } }"
+          v-model="loginForm" type="form" :actions="false" @submit="HandleLoginUser">
+          <FormKitSchema :schema="loginFormSchema" />
+          <UiButton class="w-full" type="submit" :disabled="!valid"> Sign in </UiButton>
+          <UiButton variant="ghost" class="w-full mt-2" @click="selectedLoginMethod = 'none'">
+            Back to login options
+          </UiButton>
         </FormKit>
+
         <UiSeparator />
         <UiButton variant="ghost" class="w-full">
           <NuxtLink to="/register">
