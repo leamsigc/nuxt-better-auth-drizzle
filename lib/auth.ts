@@ -3,7 +3,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import * as schema from "../db/schema";
 import { useDrizzle } from "../server/utils/drizzle";
 
-import { sendUserVerificationEmail } from "~~/server/utils/email";
+import { sendUserVerificationEmail } from "../server/utils/email";
 
 export const auth = betterAuth({
     database: drizzleAdapter(useDrizzle(), {
@@ -31,7 +31,7 @@ export const auth = betterAuth({
         }
     },
     emailVerification: {
-        async sendVerificationEmail(user, url) {
+        async sendVerificationEmail({ user, url }) {
             await sendUserVerificationEmail(user, url);
         },
         sendOnSignUp: true,

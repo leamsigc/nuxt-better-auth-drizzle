@@ -22,7 +22,7 @@ const { data } = useNuxtData("tenants");
           :key="name"
           :show-bg="false"
         >
-          <NuxtLink :href="`/app/tenant/${slug}`" >
+          <NuxtLink :to="`/app/tenant/${slug}`" :prefetch="false">
             <UiCard
               class="bg-muted/90 dark:bg-card hover:bg-background dark:hover:bg-background transition-all delay-75 group/number h-full flex flex-col"
             >

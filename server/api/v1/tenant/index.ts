@@ -5,7 +5,7 @@ import { z } from 'zod';
 export default defineEventHandler(async (event) => {
     // Handle different HTTP methods
     const method = event.method;
-    
+
     if (method === 'GET') {
         try {
             const tenants = await TenantService.getAll();

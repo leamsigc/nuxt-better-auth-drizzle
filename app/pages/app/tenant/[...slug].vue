@@ -1,4 +1,7 @@
 <script lang="ts" setup>
+import type { Template } from '~~/server/utils/template';
+import type { Tenant } from '~~/server/utils/tenant';
+
 /**
  *
  * Render the content from nuxt content folder
@@ -16,8 +19,11 @@ const slug = Array.isArray(route.params.slug)
   ? route.params.slug[0]
   : route.params.slug;
 
+const activeTenantName = `tenant-${slug}`;
+
+provide('ACTIVE_TENANT_NAME', activeTenantName);
 // Fetch tenant details
-const { data } = await useAsyncData<{ tenant: Tenant, templates: Template[] }>(`tenant-${slug}`, () =>
+const { data, refresh } = await useAsyncData<{ tenant: Tenant, templates: Template[] }>(activeTenantName, () =>
   $fetch(`/api/v1/tenant/${slug}?slug=${slug}`)
 );
 
@@ -47,6 +53,14 @@ const templates = computed(() => {
     return null;
   }
 });
+
+const selectedTemplate = ref<Template | null>(null);
+
+const fetchTemplates = async () => {
+  isLoading.value = true;
+  await refresh();
+  isLoading.value = false;
+};
 </script>
 
 <template>
@@ -76,6 +90,12 @@ const templates = computed(() => {
           <!-- Add content sections here (e.g., recent activity, settings, etc.) -->
         </div>
       </div>
+
+
+      <CreateTemplate @refresh="fetchTemplates" />
+      <EditTemplate v-if="selectedTemplate" :template="selectedTemplate" @refresh="fetchTemplates" />
+      <DeleteTemplate v-if="selectedTemplate" :id="selectedTemplate.id" :title="selectedTemplate.title"
+        @refresh="fetchTemplates" />
     </div>
   </div>
 </template>

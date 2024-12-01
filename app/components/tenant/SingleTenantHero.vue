@@ -19,6 +19,7 @@ interface TenantProps {
     logo?: string | null;
     status?: string;
 }
+const { openCreateTemplate } = useTemplates();
 const props = withDefaults(
     defineProps<TenantProps>(),
     {
@@ -31,7 +32,9 @@ const props = withDefaults(
         status: 'active'
     }
 );
-
+const OpenCreateTemplateModal = () => {
+    openCreateTemplate()
+}
 </script>
 
 
@@ -96,7 +99,7 @@ const props = withDefaults(
                 <div class="flex flex-wrap items-center gap-3">
                     <slot>
                         <UiButton size="sm" variant="outline">View as public</UiButton>
-                        <UiButton size="sm">Add new template</UiButton>
+                        <UiButton size="sm" @click="OpenCreateTemplateModal">Add new template</UiButton>
                     </slot>
                 </div>
             </div>

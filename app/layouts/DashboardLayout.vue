@@ -35,6 +35,7 @@ import {
   Trash2,
 } from "lucide-vue-next";
 import { signOut, useSession } from "~~/lib/auth-client";
+import type { Tenant } from "~~/server/utils/tenant";
 
 const { data: session } = await useSession(useFetch);
 const router = useRouter();

@@ -1,5 +1,7 @@
 
 import { z } from 'zod';
+import { TemplateService } from '~~/server/utils/template';
+import { insertTenantSchema, TenantService } from '~~/server/utils/tenant';
 
 export default defineEventHandler(async (event) => {
 

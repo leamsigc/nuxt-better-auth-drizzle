@@ -14,8 +14,6 @@ export const tools = sqliteTable("tool", {
 export const user = sqliteTable("user", {
 	id: text("id").primaryKey(),
 	name: text('name').notNull(),
-	firstName: text('firstName'),
-	lastName: text('lastName'),
 	email: text('email').notNull().unique(),
 	emailVerified: integer('emailVerified', {
 		mode: "boolean"
@@ -26,12 +24,21 @@ export const user = sqliteTable("user", {
 	}).notNull(),
 	updatedAt: integer('updatedAt', {
 		mode: "timestamp"
-	}).notNull()
+	}).notNull(),
+	firstName: text('firstName'),
+	lastName: text('lastName')
 });
 
 export const session = sqliteTable("session", {
 	id: text("id").primaryKey(),
 	expiresAt: integer('expiresAt', {
+		mode: "timestamp"
+	}).notNull(),
+	token: text('token').notNull().unique(),
+	createdAt: integer('createdAt', {
+		mode: "timestamp"
+	}).notNull(),
+	updatedAt: integer('updatedAt', {
 		mode: "timestamp"
 	}).notNull(),
 	ipAddress: text('ipAddress'),
@@ -47,10 +54,20 @@ export const account = sqliteTable("account", {
 	accessToken: text('accessToken'),
 	refreshToken: text('refreshToken'),
 	idToken: text('idToken'),
-	expiresAt: integer('expiresAt', {
+	accessTokenExpiresAt: integer('accessTokenExpiresAt', {
 		mode: "timestamp"
 	}),
-	password: text('password')
+	refreshTokenExpiresAt: integer('refreshTokenExpiresAt', {
+		mode: "timestamp"
+	}),
+	scope: text('scope'),
+	password: text('password'),
+	createdAt: integer('createdAt', {
+		mode: "timestamp"
+	}).notNull(),
+	updatedAt: integer('updatedAt', {
+		mode: "timestamp"
+	}).notNull()
 });
 
 export const verification = sqliteTable("verification", {
@@ -59,7 +76,13 @@ export const verification = sqliteTable("verification", {
 	value: text('value').notNull(),
 	expiresAt: integer('expiresAt', {
 		mode: "timestamp"
-	}).notNull()
+	}).notNull(),
+	createdAt: integer('createdAt', {
+		mode: "timestamp"
+	}),
+	updatedAt: integer('updatedAt', {
+		mode: "timestamp"
+	})
 });
 
 // Tenants table to manage different directories (e.g., Tailwind, Bootstrap, etc.)
