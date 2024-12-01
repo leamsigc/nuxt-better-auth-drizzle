@@ -1,3 +1,4 @@
+import { insertTemplateSchema, TemplateService } from "~~/server/utils/template";
 
 export default defineEventHandler(async (event) => {
     const method = event.method;
@@ -28,7 +29,7 @@ export default defineEventHandler(async (event) => {
         } catch (error) {
             throw createError({
                 statusCode: 400,
-                message: 'Invalid template data'
+                message: 'Invalid template data: ' + error
             });
         }
     }

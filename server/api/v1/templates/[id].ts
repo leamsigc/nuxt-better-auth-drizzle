@@ -1,3 +1,4 @@
+import { TemplateService } from "~~/server/utils/template";
 
 export default defineEventHandler(async (event) => {
     const method = event.method;

@@ -1,13 +1,15 @@
+import { inject } from 'vue';
 const isCreateOpen = ref(false);
 const isEditOpen = ref(false);
 const isDeleteOpen = ref(false);
 const isLoading = ref(false);
 
 export const useTemplates = () => {
-  const { data: tenantData } = useNuxtData("tenants");
+  const activeTenantName = inject('ACTIVE_TENANT_NAME');
+  const { data: tenantData } = useNuxtData(activeTenantName as string);
   const currentTenant = computed(() => {
-    if (!tenantData.value?.tenants?.length) return null;
-    return tenantData.value.tenants[0];
+    if (!tenantData.value?.tenant) return null;
+    return tenantData.value.tenant;
   });
 
   const closeOtherModals = () => {

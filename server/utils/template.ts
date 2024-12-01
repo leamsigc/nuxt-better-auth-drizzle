@@ -17,6 +17,8 @@ export const insertTemplateSchema = createInsertSchema(tables.templates, {
     price: z.number().optional(), // Price in cents if paid
     tags: z.string(), // JSON array of tags
     status: z.enum(['draft', 'published', 'archived']).default('draft'),
+    createdAt: z.date().default(new Date()).optional(),
+    updatedAt: z.date().default(new Date()).optional(),
 });
 
 export type InsertTemplate = z.infer<typeof insertTemplateSchema>;

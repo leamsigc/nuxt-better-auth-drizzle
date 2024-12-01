@@ -1,22 +1,30 @@
 <script lang="ts" setup>
 import { useToast } from "~/components/ui/toast/use-toast";
+import type { InsertTemplate } from "~~/server/utils/template";
+type InternalTemplate = InsertTemplate
 
 const { toast } = useToast();
 const { isCreateOpen, closeCreateTemplate, createTemplate, isLoading, currentTenant } = useTemplates();
 
-const form = ref({
-  name: '',
-  slug: '',
+const form = ref<Omit<InternalTemplate, 'id'|'createdAt'|'updatedAt'>>({
+  title: '',
   description: '',
-  content: '',
-  status: 'active',
-  tenantId: null as number | null
+  slug: '',
+  tenantId: 0,
+  categoryId: 0,
+  features: '',
+  url: '',
+  sourceUrl: '',
+  pricingType: 'free',
+  price: null,
+  tags: '',
+  status: 'draft',
 });
 
 const formSchema = computed(() => [
   {
     $formkit: 'text',
-    name: 'name',
+    name: 'title',
     label: 'Template Name',
     validation: 'required|length:3,50',
     placeholder: 'Enter template name'
@@ -30,17 +38,48 @@ const formSchema = computed(() => [
   },
   {
     $formkit: 'textarea',
-    name: 'description',
-    label: 'Description',
+    name: 'features',
+    label: 'Features',
     validation: 'required',
-    placeholder: 'Enter template description'
+    placeholder: 'Enter template features'
   },
   {
-    $formkit: 'textarea',
-    name: 'content',
-    label: 'Template Content',
+    $formkit: 'text',
+    name: 'url',
+    label: 'URL',
+    validation: 'required|url',
+    placeholder: 'Enter template URL'
+  },
+  {
+    $formkit: 'text',
+    name: 'sourceUrl',
+    label: 'Source URL',
+    validation: 'url',
+    placeholder: 'Enter source URL'
+  },
+  {
+    $formkit: 'select',
+    name: 'pricingType',
+    label: 'Pricing Type',
     validation: 'required',
-    placeholder: 'Enter template content'
+    options: [
+      { label: 'Free', value: 'free' },
+      { label: 'Paid', value: 'paid' }
+    ]
+  },
+  {
+    $formkit: 'text',
+    name: 'price',
+    label: 'Price',
+    validation: 'number',
+    if: '$get(pricingType).value === "paid"',
+    placeholder: 'Enter price'
+  },
+  {
+    $formkit: 'text',
+    name: 'tags',
+    label: 'Tags',
+    placeholder: 'Enter tags (comma separated)'
   },
   {
     $formkit: 'select',
@@ -48,22 +87,31 @@ const formSchema = computed(() => [
     label: 'Status',
     validation: 'required',
     options: [
-      { label: 'Active', value: 'active' },
-      { label: 'Inactive', value: 'inactive' }
+      { label: 'Draft', value: 'draft' },
+      { label: 'Published', value: 'published' }
     ]
   }
 ]);
 
 const handleSubmit = async () => {
   try {
+    form.value.description = JSON.stringify(contentData.value);
+    const slug = form.value.slug;
+    form.value.slug = slug.replace(/[^a-zA-Z0-9-]/g, '-').toLowerCase();
     await createTemplate(form.value);
     form.value = {
-      name: '',
-      slug: '',
+      title: '',
       description: '',
-      content: '',
-      status: 'active',
-      tenantId: null
+      slug: '',
+      tenantId: 0,
+      categoryId: 0,
+      features: '',
+      url: '',
+      sourceUrl: '',
+      pricingType: 'free',
+      price: null,
+      tags: '',
+      status: 'draft',
     };
     emit('refresh');
     closeCreateTemplate();
@@ -91,8 +139,8 @@ const savedContent = () => {
 </script>
 
 <template>
-  <UiDialog :open="isCreateOpen" @update:open="closeCreateTemplate">
-    <UiDialogContent class="sm:max-w-[600px]">
+  <UiDialog :open="isCreateOpen" @update:open="closeCreateTemplate" class="py-10">
+    <UiDialogContent class="sm:max-w-[700px] max-h-[600px] overflow-y-scroll">
       <UiDialogHeader>
         <UiDialogTitle>Create Template</UiDialogTitle>
         <UiDialogDescription>
