@@ -76,71 +76,71 @@ const data = {
         },
       ],
     },
-    {
-      title: "Models",
-      url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
-      ],
-    },
+    // {
+    //   title: "Models",
+    //   url: "#",
+    //   icon: Bot,
+    //   items: [
+    //     {
+    //       title: "Genesis",
+    //       url: "#",
+    //     },
+    //     {
+    //       title: "Explorer",
+    //       url: "#",
+    //     },
+    //     {
+    //       title: "Quantum",
+    //       url: "#",
+    //     },
+    //   ],
+    // },
+    // {
+    //   title: "Documentation",
+    //   url: "#",
+    //   icon: BookOpen,
+    //   items: [
+    //     {
+    //       title: "Introduction",
+    //       url: "#",
+    //     },
+    //     {
+    //       title: "Get Started",
+    //       url: "#",
+    //     },
+    //     {
+    //       title: "Tutorials",
+    //       url: "#",
+    //     },
+    //     {
+    //       title: "Changelog",
+    //       url: "#",
+    //     },
+    //   ],
+    // },
+    // {
+    //   title: "Settings",
+    //   url: "#",
+    //   icon: Settings2,
+    //   items: [
+    //     {
+    //       title: "General",
+    //       url: "#",
+    //     },
+    //     {
+    //       title: "Team",
+    //       url: "#",
+    //     },
+    //     {
+    //       title: "Billing",
+    //       url: "#",
+    //     },
+    //     {
+    //       title: "Limits",
+    //       url: "#",
+    //     },
+    //   ],
+    // },
   ],
   projects: [
     {
@@ -149,12 +149,12 @@ const data = {
       icon: Frame,
     },
     {
-      name: "Sales & Marketing",
+      name: "Analytics",
       url: "#",
       icon: PieChart,
     },
     {
-      name: "Travel",
+      name: "Users",
       url: "#",
       icon: Map,
     },
@@ -288,35 +288,6 @@ const refreshTenants = async () => {
                   <span>{{ item.name }}</span>
                 </a>
               </UiSidebarMenuButton>
-              <UiDropdownMenu>
-                <UiDropdownMenuTrigger as-child>
-                  <UiSidebarMenuAction show-on-hover>
-                    <MoreHorizontal />
-                    <span class="sr-only">More</span>
-                  </UiSidebarMenuAction>
-                </UiDropdownMenuTrigger>
-                <UiDropdownMenuContent class="w-48 rounded-lg" side="bottom" align="end">
-                  <UiDropdownMenuItem>
-                    <Folder class="text-muted-foreground" />
-                    <span>View Project</span>
-                  </UiDropdownMenuItem>
-                  <UiDropdownMenuItem>
-                    <Forward class="text-muted-foreground" />
-                    <span>Share Project</span>
-                  </UiDropdownMenuItem>
-                  <UiDropdownMenuSeparator />
-                  <UiDropdownMenuItem>
-                    <Trash2 class="text-muted-foreground" />
-                    <span>Delete Project</span>
-                  </UiDropdownMenuItem>
-                </UiDropdownMenuContent>
-              </UiDropdownMenu>
-            </UiSidebarMenuItem>
-            <UiSidebarMenuItem>
-              <UiSidebarMenuButton class="text-sidebar-foreground/70">
-                <MoreHorizontal class="text-sidebar-foreground/70" />
-                <span>More</span>
-              </UiSidebarMenuButton>
             </UiSidebarMenuItem>
           </UiSidebarMenu>
         </UiSidebarGroup>
@@ -374,7 +345,7 @@ const refreshTenants = async () => {
                 </UiDropdownMenuGroup>
                 <UiDropdownMenuSeparator />
                 <UiDropdownMenuGroup>
-                  <UiDropdownMenuItem>
+                  <UiDropdownMenuItem @click="navigateTo('/app/user/profile')">
                     <BadgeCheck />
                     Account
                   </UiDropdownMenuItem>

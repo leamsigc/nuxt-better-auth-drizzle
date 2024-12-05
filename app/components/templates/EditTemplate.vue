@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { useToast } from "~/components/ui/toast/use-toast";
+import type { Template } from "~~/server/utils/template";
 type InternalTemplate = Template;
 const props = defineProps<{
   template: InternalTemplate;

@@ -12,4 +12,5 @@ export const {
 	useSession,
 	forgetPassword,
 	resetPassword,
+	deleteUser
 } = authClient;
