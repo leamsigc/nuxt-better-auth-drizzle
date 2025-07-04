@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Column } from '@tanstack/vue-table'
-import { cn } from '@/lib/utils'
+import { cn } from '@@/lib/utils'
 
 
 interface DataTableColumnHeaderProps {
