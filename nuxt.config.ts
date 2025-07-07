@@ -1,5 +1,4 @@
 import type { NuxtPage } from 'nuxt/schema';
-import { OgImage } from './.nuxt/components.d';
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
 import { checkEnv } from "./config/env.config"
@@ -8,9 +7,6 @@ import { env } from "node:process";
 checkEnv(env);
 
 export default defineNuxtConfig({
-  alias: {
-    // '@':"./",
-  },
 compatibilityDate: '2024-04-03',
   future: { compatibilityVersion: 4 },
   devtools: { enabled: true },
@@ -36,10 +32,7 @@ compatibilityDate: '2024-04-03',
     vueI18n: '~~/translation/i18n.config.ts',
     baseUrl: process.env.NUXT_APP_URL,
     locales: [
-      { code: 'en', language: 'en-US', name: 'English' },
-      { code: 'zh-CN', language: 'zh-CN', name: '简体中文' },
-      { code: 'ja', language: 'ja-JP', name: '日本語' },
-      { code: 'fr', language: 'fr-FR', name: 'Français' }
+      { code: 'en', language: 'en-US', name: 'English' }
     ],
     defaultLocale: 'en',
     bundle: {
@@ -106,18 +99,9 @@ compatibilityDate: '2024-04-03',
     }
   },
   content: {
-    // studio: {
-    //   enabled: true
-    // },
     build: {
-      pathMeta: {
-        forceLeadingSlash: true
-      },
       markdown: {
         highlight: {
-          // Theme used in all color schemes.
-          // theme: 'github-light',
-          // OR
           theme: {
             // Default theme (same as single string)
             default: 'github-light',
