@@ -1,14 +1,14 @@
-### How to use?
-1.Click on the "Use this template" button 
-2.click on the "Create repository from template" button.
-3.Create your own repo
-4.Clone the project locally
-5.Crate the .env file base on the .env-example `cp .env-example .env`
-6.Run `pnpm i`
-7.Run `pnpm db:generate`
-8.Run `pnpm db:migrate`
-9.Run `pnpm dev`
-10.To view the db studio run `pnpm db:studio`
+## How to use?
+1. Click on the "Use this template" button 
+2. click on the "Create repository from template" button.
+3. Create your own repo
+4. Clone the project locally
+5. Crate the .env file base on the .env-example `cp .env-example .env`
+6. Run `pnpm i`
+7. Run `pnpm db:generate`
+8. Run `pnpm db:migrate`
+9. Run `pnpm dev`
+10. To view the db studio run `pnpm db:studio`
 
 
 #  Nuxt and Better Auth integration example | Step by step tutorial | Basic Setup 
