@@ -1,4 +1,6 @@
 {
     "vue3snippets.enable-compile-vue-file-on-did-save-code": true,
-    "typescript.tsdk": "node_modules/typescript/lib"
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "typescript.format.enable": true,
+    "i18n-ally.localesPaths": []
 }

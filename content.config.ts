@@ -25,7 +25,7 @@ export const collections = {
     content: defineCollection(asSeoCollection({
         type: 'page',
         source: {
-            include: '**.md',
+            include: '**/*.md',
             exclude: ['nav/**.yml']
         },
         schema: z.object({
